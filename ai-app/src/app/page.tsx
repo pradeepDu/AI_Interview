@@ -37,14 +37,14 @@ export default function HulyPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tighter mb-8 leading-[1.1]">
-                            Everything App <br />
+                            Everything Platform <br />
                             <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-cyan-400">
-                                for your team.
+                                to find the best.
                             </span>
                         </h1>
                         <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                            OrbitFlow replaces Jira, Slack, Notion, and Zoom. <br className="hidden md:block" />
-                            The operating system for high-velocity engineering teams.
+                            CareerFlow helps job seekers and companies to connect. <br className="hidden md:block" />
+                            Helping out one to get the best out of the crowd.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
                             <button className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-semibold text-lg transition-all shadow-[0_0_40px_-10px_rgba(79,70,229,0.5)]">
@@ -207,7 +207,7 @@ export default function HulyPage() {
                                 <Command className="text-purple-400" /> MetaBrain
                             </h3>
                             <p className="text-gray-400 mb-6">
-                                Connect tasks, docs, and chats. Mention any object anywhere. OrbitFlow creates a knowledge graph of your company.
+                                Connect tasks, docs, and chats. Mention any object anywhere. CareerFlow creates a knowledge graph of your company.
                             </p>
                             <div className="text-sm text-gray-300 font-mono bg-black/40 p-4 rounded-lg border border-white/5">
                                 <span className="text-gray-500">@</span><span className="text-blue-400">feature-login</span> blocked by <span className="text-purple-400">#design-specs</span>
@@ -242,7 +242,7 @@ export default function HulyPage() {
                         Stop switching apps. <br /> Start flowing.
                     </h2>
                     <p className="text-xl text-gray-400 mb-10">
-                        Join 4,000+ teams moving faster with OrbitFlow.
+                        Join 4,000+ teams moving faster with CareerFlow.
                     </p>
                     <button className="px-10 py-5 bg-white text-black text-xl font-bold rounded-full hover:bg-gray-200 transition-transform hover:scale-105 shadow-[0_0_50px_rgba(255,255,255,0.2)]">
                         Get Started for Free
@@ -257,10 +257,10 @@ export default function HulyPage() {
                 <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-2 opacity-50">
                         <Layers className="w-5 h-5" />
-                        <span className="font-bold">OrbitFlow</span>
+                        <span className="font-bold">CareerFlow</span>
                     </div>
                     <div className="text-gray-600 text-sm">
-                        © 2024 OrbitFlow Inc. Inspired by Huly.
+                        © 2024 CareerFlow Inc. Inspired by Huly.
                     </div>
                     <div className="flex gap-6 text-gray-500">
                         <Github className="w-5 h-5 hover:text-white cursor-pointer" />
