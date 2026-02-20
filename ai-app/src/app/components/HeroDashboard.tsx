@@ -42,7 +42,7 @@ export function HeroDashboard() {
                         </div>
                         <div className="ml-4 px-3 py-1 bg-black/40 rounded-md text-xs text-gray-400 flex items-center gap-2 border border-white/5">
                             <Search className="w-3 h-3" />
-                            Search OrbitFlow... (Cmd+K)
+                            Search CareerFlow... (Cmd+K)
                         </div>
                     </div>
 
@@ -106,7 +106,7 @@ export function HeroDashboard() {
                 >
                     <div className="flex items-center gap-2 text-gray-400 mb-3 border-b border-white/5 pb-2">
                         <Github size={14} />
-                        <span>orbitflow/core</span>
+                        <span>careerflow/core</span>
                     </div>
                     <div className="space-y-2 text-gray-500">
                         <div className="flex gap-2">
