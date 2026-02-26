@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUidFromToken } from '@/lib/authServer';
 import connectDB from '@/lib/mongodb';
 import UserModel from '@/models/User';
 
@@ -16,7 +17,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const firebaseUid = authHeader.replace('Bearer ', '');
+    const firebaseUid = getUidFromToken(authHeader);
+    if (!firebaseUid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     await connectDB();
 
     const user = await UserModel.findOne({ firebaseUid });
@@ -52,32 +54,38 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const firebaseUid = authHeader.replace('Bearer ', '');
+    const firebaseUid = getUidFromToken(authHeader);
+    if (!firebaseUid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     const body = await request.json();
 
     await connectDB();
 
-    const user = await UserModel.findOne({ firebaseUid });
+    // The client sends either a nested { profile: {...} } body or a flat body.
+    const profileData = body.profile ?? body;
+
+    const profileUpdate: Record<string, unknown> = {};
+    if (profileData.name)                         profileUpdate['profile.name']             = profileData.name;
+    if (profileData.phone !== undefined)          profileUpdate['profile.phone']            = profileData.phone;
+    if (profileData.resumeUrl)                    profileUpdate['profile.resumeUrl']        = profileData.resumeUrl;
+    if (profileData.profilePictureUrl)            profileUpdate['profile.profilePictureUrl']= profileData.profilePictureUrl;
+    if (profileData.skills)                       profileUpdate['profile.skills']           = profileData.skills;
+    if (profileData.experience)                   profileUpdate['profile.experience']       = profileData.experience;
+    if (profileData.projects)                     profileUpdate['profile.projects']         = profileData.projects;
+    if (profileData.extracurriculars !== undefined) profileUpdate['profile.extracurriculars'] = profileData.extracurriculars;
+
+    // Profile is considered complete once the user has saved it at least once (has a name)
+    const hasName = !!(profileData.name?.trim());
+    profileUpdate['profileComplete'] = hasName;
+
+    const user = await (UserModel as any).findOneAndUpdate(
+      { firebaseUid },
+      { $set: profileUpdate },
+      { returnDocument: 'after', runValidators: true }
+    );
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found. Please complete sign-up first.' }, { status: 404 });
     }
-
-    // Update profile fields
-    if (body.name) user.profile.name = body.name;
-    if (body.phone) user.profile.phone = body.phone;
-    if (body.resumeUrl) user.profile.resumeUrl = body.resumeUrl;
-    if (body.skills) user.profile.skills = body.skills;
-    if (body.experience) user.profile.experience = body.experience;
-    if (body.projects) user.profile.projects = body.projects;
-    if (body.extracurriculars !== undefined) {
-      user.profile.extracurriculars = body.extracurriculars;
-    }
-
-    await user.save();
 
     return NextResponse.json({
       success: true,

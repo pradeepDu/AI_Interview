@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUidFromToken } from '@/lib/authServer';
 import connectDB from '@/lib/mongodb';
 import JobModel from '@/models/Job';
 
@@ -59,7 +60,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const firebaseUid = authHeader.replace('Bearer ', '');
+    const firebaseUid = getUidFromToken(authHeader);
+    if (!firebaseUid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     await connectDB();
 
     // Verify user is HR
