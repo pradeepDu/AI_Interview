@@ -24,8 +24,9 @@ const ProjectSchema = new Schema(
 
 const UserProfileSchema = new Schema(
   {
-    name: { type: String },        // fix #3 — not required at schema level,
-    phone: { type: String },       // user is created first, profile filled later
+    name: { type: String },
+    phone: { type: String },
+    company: { type: String },
     resumeUrl: { type: String },
     profilePictureUrl: { type: String },
     skills: [{ type: String }],
@@ -33,7 +34,7 @@ const UserProfileSchema = new Schema(
     projects: [ProjectSchema],
     extracurriculars: { type: String },
   },
-  { _id: false } // fix #1
+  { _id: false }
 );
 
 const UserSchema = new Schema<User>(

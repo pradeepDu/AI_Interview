@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "firebase": "^12.9.0",
     "framer-motion": "^12.34.1",
+    "groq-sdk": "^0.37.0",
     "gsap": "^3.14.2",
     "lenis": "^1.3.17",
     "lucide-react": "^0.574.0",
