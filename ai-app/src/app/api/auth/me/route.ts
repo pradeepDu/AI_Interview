@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUidFromToken } from '@/lib/authServer';
 import { auth as firebaseAuth } from '@/lib/firebase';
 import connectDB from '@/lib/mongodb';
 import UserModel from '@/models/User';
@@ -20,7 +21,8 @@ export async function GET(request: NextRequest) {
 
     // Extract Firebase UID from the request
     // In a real implementation, you'd verify the Firebase token here
-    const firebaseUid = authHeader.replace('Bearer ', '');
+    const firebaseUid = getUidFromToken(authHeader);
+    if (!firebaseUid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
 
     await connectDB();
 

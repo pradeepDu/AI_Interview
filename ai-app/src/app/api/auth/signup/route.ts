@@ -1,42 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import connectDB from '@/lib/mongodb';
 import UserModel from '@/models/User';
 
+/**
+ * POST /api/auth/signup
+ * Called after Firebase OAuth popup succeeds.
+ * The Firebase user already exists — this just creates the MongoDB profile.
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, role, name, phone } = body;
+    const { firebaseUid, email, role, name, phone, company } = body;
 
-    // Validate required fields
-    if (!email || !password || !role || !name) {
+    if (!firebaseUid || !email || !role || !name) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Create Firebase user
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    if (!['job_seeker', 'hr'].includes(role)) {
+      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+    }
 
-    const firebaseUser = userCredential.user;
-
-    // Connect to MongoDB
     await connectDB();
 
-    // Create MongoDB user document
-    const newUser = await UserModel.create({
-      firebaseUid: firebaseUser.uid,
+    // Guard: check by firebaseUid OR email — either means the user already exists
+    const existing = await (UserModel as any).findOne({
+      $or: [{ firebaseUid }, { email: email.toLowerCase() }],
+    });
+    if (existing) {
+      // Update firebaseUid if the doc was found by email (e.g. re-auth with same Google account)
+      if (existing.firebaseUid !== firebaseUid) {
+        await (UserModel as any).updateOne({ _id: existing._id }, { firebaseUid });
+      }
+      // Existing users already have a profile — go straight to jobs/dashboard
+      return NextResponse.json({
+        success: true,
+        redirectTo: existing.role === 'hr' ? '/admin/dashboard' : '/jobs',
+      });
+    }
+
+    const newUser = await (UserModel as any).create({
+      firebaseUid,
       email: email.toLowerCase(),
       role,
       profile: {
         name,
         phone: phone || '',
+        company: company || '',
         skills: [],
         experience: [],
         projects: [],
@@ -47,7 +59,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       user: {
-        id: newUser._id,
+        id: newUser._id?.toString(),
         email: newUser.email,
         role: newUser.role,
       },
@@ -55,15 +67,17 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Signup error:', error);
-
-    // Handle Firebase errors
-    if (error.code === 'auth/email-already-in-use') {
-      return NextResponse.json(
-        { error: 'Email already in use' },
-        { status: 400 }
-      );
+    // E11000 duplicate key — race condition, treat as existing user
+    if (error.code === 11000) {
+      const keyEmail = error.keyValue?.email;
+      if (keyEmail) {
+        const doc = await (UserModel as any).findOne({ email: keyEmail }).lean();
+        return NextResponse.json({
+          success: true,
+          redirectTo: doc?.role === 'hr' ? '/admin/dashboard' : '/jobs',
+        });
+      }
     }
-
     return NextResponse.json(
       { error: error.message || 'Signup failed' },
       { status: 500 }
