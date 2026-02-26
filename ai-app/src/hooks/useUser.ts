@@ -18,7 +18,10 @@ export function useUser() {
       }
 
       try {
-        const response = await fetch('/api/auth/me');
+        const token = await firebaseUser.getIdToken();
+        const response = await fetch('/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (response.ok) {
           const data = await response.json();
           setUser(data);
