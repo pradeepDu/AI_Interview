@@ -2,9 +2,28 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Layers } from 'lucide-react';
-import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { auth, googleProvider, facebookProvider } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+
+async function getRedirectPath(firebaseUser: User): Promise<string> {
+  try {
+    const token = await firebaseUser.getIdToken();
+    const res = await fetch('/api/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.role === 'hr') return '/admin/dashboard';
+      if (!data.profileComplete) return '/profile';
+      return '/jobs';
+    }
+    // New OAuth user - go to signup to pick role
+    return '/signup';
+  } catch {
+    return '/';
+  }
+}
 
 export default function LoginPage() {
   const [password, setPassword] = useState('');
@@ -18,8 +37,9 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setError('');
-      await signInWithPopup(auth, googleProvider);
-      router.push('/');
+      const result = await signInWithPopup(auth, googleProvider);
+      const path = await getRedirectPath(result.user);
+      router.push(path);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -31,8 +51,9 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setError('');
-      await signInWithPopup(auth, facebookProvider);
-      router.push('/');
+      const result = await signInWithPopup(auth, facebookProvider);
+      const path = await getRedirectPath(result.user);
+      router.push(path);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -45,8 +66,9 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setError('');
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const path = await getRedirectPath(result.user);
+      router.push(path);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -156,8 +178,18 @@ export default function LoginPage() {
           </div>
 
 
-          {/* Password Form */}
+          {/* Email + Password Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email *"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                required
+              />
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -193,9 +225,7 @@ export default function LoginPage() {
           <div className="mt-6 flex justify-center gap-6 text-sm">
             <button className="text-blue-600 hover:underline">Forgot Password</button>
             <span className="text-gray-400">•</span>
-            <button className="text-blue-600 hover:underline">Sign Up</button>
-            <span className="text-gray-400">•</span>
-            <button className="text-blue-600 hover:underline">Student Help</button>
+            <a href="/signup" className="text-blue-600 hover:underline">Sign Up</a>
           </div>
         </motion.div>
       </div>
