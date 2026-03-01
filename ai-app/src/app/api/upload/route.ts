@@ -33,8 +33,11 @@ export async function POST(request: NextRequest) {
     const fileName = `${user._id.toString()}-${Date.now()}.${ext}`;
     const filePath = `${user._id.toString()}/${fileName}`;
 
-    // Ensure the target bucket exists (auto-create if missing)
-    await supabaseAdmin.storage.createBucket(bucket, { public: true }).catch(() => {});
+    // Ensure the target bucket exists (auto-create if missing; ignore "already exists" error)
+    const { error: bucketErr } = await supabaseAdmin.storage.createBucket(bucket, { public: true });
+    if (bucketErr && !bucketErr.message.toLowerCase().includes('already exists')) {
+      console.error('Bucket ensure error:', bucketErr);
+    }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

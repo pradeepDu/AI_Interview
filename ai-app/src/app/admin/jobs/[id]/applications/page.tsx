@@ -50,6 +50,30 @@ export default function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [loadingResume, setLoadingResume] = useState<string | null>(null);
+
+  const viewResume = async (appId: string, resumeUrl: string) => {
+    try {
+      setLoadingResume(appId);
+      const token = await user!.getIdToken();
+      // Use the server-side proxy so the admin client handles bucket access
+      const proxyUrl = `/api/admin/resume?url=${encodeURIComponent(resumeUrl)}`;
+      const res = await fetch(proxyUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+        redirect: 'follow',
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Failed to load resume');
+      }
+      // The fetch followed the redirect — open the final URL in a new tab
+      window.open(res.url, '_blank', 'noreferrer');
+    } catch (err: any) {
+      toast.error(err.message || 'Could not open resume');
+    } finally {
+      setLoadingResume(null);
+    }
+  };
 
   useEffect(() => {
     if (user) fetchApplications();
@@ -178,15 +202,16 @@ export default function ApplicationsPage() {
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {app.candidateId?.profile?.resumeUrl && (
-                        <a
-                          href={app.candidateId.profile.resumeUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"
+                        <button
+                          onClick={() => viewResume(app._id, app.candidateId.profile!.resumeUrl!)}
+                          disabled={loadingResume === app._id}
+                          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white disabled:opacity-50 transition-colors"
                           title="View Resume"
                         >
-                          <FileText className="h-4 w-4" />
-                        </a>
+                          {loadingResume === app._id
+                            ? <Loader2 className="h-4 w-4 animate-spin" />
+                            : <FileText className="h-4 w-4" />}
+                        </button>
                       )}
                       {updating === app._id ? (
                         <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
