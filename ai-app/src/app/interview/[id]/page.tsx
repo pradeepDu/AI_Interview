@@ -694,125 +694,23 @@ export default function InterviewPage() {
   }
 
   // ─── Phase: complete ─────────────────────────────────────────────────────
-  if (phase === 'complete' && session) {
-    const questions = session.questions;
+  if (phase === 'complete') {
     return (
-      <div className="min-h-screen bg-neutral-950 px-6 py-12">
-        <div className="max-w-3xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-2">
-            <CheckCircle className="w-12 h-12 text-green-400 mx-auto" />
-            <h1 className="text-3xl font-bold text-white">Interview Complete</h1>
-            <p className="text-neutral-400">
-              Your responses have been evaluated by Groq AI.
-            </p>
-          </div>
-
-          {/* AI Summary */}
-          {summary && (
-            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-white font-semibold text-lg">Overall Score</p>
-                <span className="text-3xl font-bold text-violet-400">
-                  {summary.overallScore}
-                  <span className="text-neutral-500 text-base font-normal">/10</span>
-                </span>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 space-y-2">
-                  <p className="text-green-400 text-sm font-medium">Strengths</p>
-                  <ul className="space-y-1">
-                    {summary.strengths.map((s, i) => (
-                      <li key={i} className="text-neutral-300 text-sm flex gap-2">
-                        <CheckCircle className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 space-y-2">
-                  <p className="text-amber-400 text-sm font-medium">Areas to Improve</p>
-                  <ul className="space-y-1">
-                    {summary.concerns.map((c, i) => (
-                      <li key={i} className="text-neutral-300 text-sm flex gap-2">
-                        <AlertCircle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Per-question feedback */}
-          <div className="space-y-4">
-            <p className="text-white font-semibold">Question Breakdown</p>
-            {questions.map((q, i) => (
-              <div
-                key={q.id}
-                className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 space-y-3"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1 flex-1">
-                    <Badge className={`text-xs capitalize border ${typeColor(q.type)}`}>
-                      {q.type}
-                    </Badge>
-                    <p className="text-white text-sm leading-relaxed mt-1">{q.text}</p>
-                  </div>
-                  {q.evaluation && (
-                    <span className="text-lg font-bold text-violet-400 shrink-0">
-                      {q.evaluation.score}/10
-                    </span>
-                  )}
-                </div>
-
-                {q.evaluation && (
-                  <div className="border-t border-neutral-800 pt-3 space-y-2">
-                    <p className="text-neutral-300 text-sm">{q.evaluation.feedback}</p>
-                    {q.evaluation.strengths.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {q.evaluation.strengths.map((s, j) => (
-                          <span
-                            key={j}
-                            className="text-xs bg-green-500/20 text-green-300 border border-green-500/30 rounded-full px-2.5 py-0.5"
-                          >
-                            ✓ {s}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {q.transcript && (
-                  <details className="text-xs text-neutral-500 cursor-pointer">
-                    <summary className="select-none hover:text-neutral-400">
-                      View transcript
-                    </summary>
-                    <p className="mt-2 text-neutral-400 leading-relaxed">{q.transcript}</p>
-                  </details>
-                )}
-
-                {!q.evaluation && (
-                  <p className="text-neutral-500 text-xs italic">Not answered</p>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="flex justify-center gap-4">
-            <Button
-              onClick={() => router.push('/jobs')}
-              variant="outline"
-              className="border-neutral-700 text-neutral-300"
-            >
-              Browse More Jobs
-            </Button>
-          </div>
+      <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center gap-6 px-6 text-center">
+        <CheckCircle className="w-16 h-16 text-green-400" />
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-white">Interview Submitted</h1>
+          <p className="text-neutral-400 max-w-sm">
+            Your responses have been recorded. The hiring team will review your interview and be in touch.
+          </p>
         </div>
+        <Button
+          onClick={() => router.push('/')}
+          className="bg-violet-600 hover:bg-violet-700 text-white px-8"
+          size="lg"
+        >
+          Go to Home
+        </Button>
       </div>
     );
   }
