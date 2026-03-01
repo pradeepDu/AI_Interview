@@ -123,7 +123,7 @@ export function NavBar() {
                 className="flex items-center gap-2 rounded-full pl-1 pr-2 py-1 hover:bg-white/10 transition-colors"
               >
                 <Avatar name={displayName} src={avatarSrc} />
-                <span className="hidden sm:block text-sm font-medium text-white max-w-[140px] truncate">
+                <span className="hidden sm:block text-sm font-medium text-white max-w-35 truncate">
                   {displayName}
                 </span>
                 <ChevronDown
