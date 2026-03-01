@@ -404,18 +404,18 @@ export default function ApplicationsPage() {
                     </div>
 
                     {/* Action buttons */}
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       {/* Resume */}
                       {app.candidateId?.profile?.resumeUrl && (
                         <button
                           onClick={() => viewResume(app._id, app.candidateId.profile!.resumeUrl!)}
                           disabled={loadingResume === app._id}
-                          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white disabled:opacity-50 transition-colors"
+                          className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white disabled:opacity-50 transition-colors"
                           title="View Resume"
                         >
                           {loadingResume === app._id
-                            ? <Loader2 className="h-4 w-4 animate-spin" />
-                            : <FileText className="h-4 w-4" />}
+                            ? <Loader2 className="h-5 w-5 animate-spin" />
+                            : <FileText className="h-5 w-5" />}
                         </button>
                       )}
 
@@ -423,34 +423,34 @@ export default function ApplicationsPage() {
                       {app.aiSummary && (
                         <button
                           onClick={() => setAnalysisAppId(app._id)}
-                          className="p-1.5 rounded-lg hover:bg-purple-500/20 text-slate-400 hover:text-purple-400 transition-colors"
+                          className="p-2 rounded-lg hover:bg-purple-500/20 text-slate-400 hover:text-purple-400 transition-colors"
                           title="View AI Analysis"
                         >
-                          <BarChart2 className="h-4 w-4" />
+                          <BarChart2 className="h-5 w-5" />
                         </button>
                       )}
 
                       {/* Status actions */}
                       {updating === app._id ? (
-                        <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                        <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
                       ) : (
                         <>
                           {app.status !== "shortlisted" && (
                             <button
                               onClick={() => updateStatus(app._id, "shortlisted")}
-                              className="p-1.5 rounded-lg hover:bg-green-500/20 text-slate-400 hover:text-green-400 transition-colors"
+                              className="p-2 rounded-lg hover:bg-green-500/20 text-slate-400 hover:text-green-400 transition-colors"
                               title="Shortlist"
                             >
-                              <CheckCircle className="h-4 w-4" />
+                              <CheckCircle className="h-5 w-5" />
                             </button>
                           )}
                           {app.status !== "rejected" && (
                             <button
                               onClick={() => updateStatus(app._id, "rejected")}
-                              className="p-1.5 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
+                              className="p-2 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
                               title="Reject"
                             >
-                              <XCircle className="h-4 w-4" />
+                              <XCircle className="h-5 w-5" />
                             </button>
                           )}
                         </>
