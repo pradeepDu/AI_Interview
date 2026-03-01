@@ -17,8 +17,7 @@ const ApplicationSchema = new Schema<Application>(
     },
     interviewId: { 
       type: Schema.Types.ObjectId, 
-      ref: 'Interview', 
-      required: true 
+      ref: 'Interview',
     },
     status: {
       type: String,

@@ -5,12 +5,14 @@ import { useAuth } from '@/lib/authContext';
 import type { UserRole } from '@/types';
 
 export function useRole() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchRole() {
+      // Wait for Firebase auth to finish initializing before making a decision
+      if (authLoading) return;
       if (!user) {
         setRole(null);
         setLoading(false);
@@ -18,7 +20,10 @@ export function useRole() {
       }
 
       try {
-        const response = await fetch('/api/auth/me');
+        const token = await user.getIdToken();
+        const response = await fetch('/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (response.ok) {
           const data = await response.json();
           setRole(data.role);
@@ -31,7 +36,7 @@ export function useRole() {
     }
 
     fetchRole();
-  }, [user]);
+  }, [user, authLoading]);
 
   return {
     role,

@@ -27,6 +27,8 @@ const UserProfileSchema = new Schema(
     name: { type: String },
     phone: { type: String },
     company: { type: String },
+    designation: { type: String },   // HR: job title e.g. "Talent Acquisition Manager"
+    department: { type: String },    // HR: e.g. "Human Resources"
     resumeUrl: { type: String },
     profilePictureUrl: { type: String },
     skills: [{ type: String }],

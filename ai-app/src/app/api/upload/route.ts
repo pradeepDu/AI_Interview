@@ -33,6 +33,9 @@ export async function POST(request: NextRequest) {
     const fileName = `${user._id.toString()}-${Date.now()}.${ext}`;
     const filePath = `${user._id.toString()}/${fileName}`;
 
+    // Ensure the target bucket exists (auto-create if missing)
+    await supabaseAdmin.storage.createBucket(bucket, { public: true }).catch(() => {});
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 

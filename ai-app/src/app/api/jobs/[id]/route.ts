@@ -7,12 +7,13 @@ import JobModel from '@/models/Job';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
 
-    const job = await JobModel.findById(params.id)
+    const job = await JobModel.findById(id)
       .populate('createdBy', 'profile.name email');
 
     if (!job) {
@@ -37,9 +38,10 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const authHeader = request.headers.get('authorization');
     
     if (!authHeader) {
@@ -51,7 +53,7 @@ export async function PATCH(
 
     await connectDB();
 
-    const job = await JobModel.findById(params.id);
+    const job = await JobModel.findById(id);
 
     if (!job) {
       return NextResponse.json(
@@ -84,9 +86,10 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const authHeader = request.headers.get('authorization');
     
     if (!authHeader) {
@@ -98,7 +101,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const job = await JobModel.findByIdAndDelete(params.id);
+    const job = await JobModel.findByIdAndDelete(id);
 
     if (!job) {
       return NextResponse.json(

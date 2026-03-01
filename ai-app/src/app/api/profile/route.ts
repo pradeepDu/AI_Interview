@@ -64,14 +64,17 @@ export async function PATCH(request: NextRequest) {
     const profileData = body.profile ?? body;
 
     const profileUpdate: Record<string, unknown> = {};
-    if (profileData.name)                         profileUpdate['profile.name']             = profileData.name;
-    if (profileData.phone !== undefined)          profileUpdate['profile.phone']            = profileData.phone;
-    if (profileData.resumeUrl)                    profileUpdate['profile.resumeUrl']        = profileData.resumeUrl;
-    if (profileData.profilePictureUrl)            profileUpdate['profile.profilePictureUrl']= profileData.profilePictureUrl;
-    if (profileData.skills)                       profileUpdate['profile.skills']           = profileData.skills;
-    if (profileData.experience)                   profileUpdate['profile.experience']       = profileData.experience;
-    if (profileData.projects)                     profileUpdate['profile.projects']         = profileData.projects;
-    if (profileData.extracurriculars !== undefined) profileUpdate['profile.extracurriculars'] = profileData.extracurriculars;
+    if (profileData.name)                           profileUpdate['profile.name']              = profileData.name;
+    if (profileData.phone !== undefined)            profileUpdate['profile.phone']             = profileData.phone;
+    if (profileData.company !== undefined)          profileUpdate['profile.company']           = profileData.company;
+    if (profileData.designation !== undefined)      profileUpdate['profile.designation']       = profileData.designation;
+    if (profileData.department !== undefined)       profileUpdate['profile.department']        = profileData.department;
+    if (profileData.resumeUrl)                      profileUpdate['profile.resumeUrl']         = profileData.resumeUrl;
+    if (profileData.profilePictureUrl)              profileUpdate['profile.profilePictureUrl'] = profileData.profilePictureUrl;
+    if (profileData.skills)                         profileUpdate['profile.skills']            = profileData.skills;
+    if (profileData.experience)                     profileUpdate['profile.experience']        = profileData.experience;
+    if (profileData.projects)                       profileUpdate['profile.projects']          = profileData.projects;
+    if (profileData.extracurriculars !== undefined) profileUpdate['profile.extracurriculars']  = profileData.extracurriculars;
 
     // Profile is considered complete once the user has saved it at least once (has a name)
     const hasName = !!(profileData.name?.trim());
