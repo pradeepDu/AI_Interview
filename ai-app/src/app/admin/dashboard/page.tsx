@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/authContext";
 import { useRole } from "@/hooks/useRole";
 import { Button } from "@/components/ui/button";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import {
-  Plus,
   Briefcase,
   Users,
   Clock,
@@ -21,7 +21,6 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 
 interface Job {
   _id: string;
@@ -143,12 +142,17 @@ export default function HRDashboard() {
             <h1 className="text-3xl font-bold text-white">HR Dashboard</h1>
             <p className="text-slate-400 mt-1">Manage jobs and review applications</p>
           </div>
-          <Link href="/admin/jobs/create">
-            <Button className="relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white gap-2 px-5 shadow-lg shadow-blue-900/40 hover:shadow-blue-700/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ring-1 ring-blue-500/30 hover:ring-blue-400/60">
-              <Plus className="h-4 w-4" />
-              Post New Job
-            </Button>
-          </Link>
+          <InteractiveHoverButton
+            style={{
+              "--background": "oklch(0.19 0.042 258)",
+              "--primary": "oklch(0.55 0.24 270)",
+              "--primary-foreground": "oklch(1 0 0)",
+            } as React.CSSProperties}
+            className="border-indigo-500/40 text-white shadow-lg shadow-indigo-900/40"
+            onClick={() => router.push("/admin/jobs/create")}
+          >
+            Post New Job
+          </InteractiveHoverButton>
         </div>
 
         {/* Stats Grid */}
@@ -209,12 +213,17 @@ export default function HRDashboard() {
             <div className="text-center py-16">
               <Briefcase className="h-12 w-12 mx-auto text-slate-600 mb-3" />
               <p className="text-slate-400">No jobs posted yet</p>
-              <Link href="/admin/jobs/create">
-                <Button className="mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white gap-2 shadow-lg shadow-blue-900/40 hover:shadow-blue-700/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ring-1 ring-blue-500/30 hover:ring-blue-400/60">
-                  <Plus className="h-4 w-4" />
-                  Post Your First Job
-                </Button>
-              </Link>
+              <InteractiveHoverButton
+                style={{
+                  "--background": "oklch(0.19 0.042 258)",
+                  "--primary": "oklch(0.55 0.24 270)",
+                  "--primary-foreground": "oklch(1 0 0)",
+                } as React.CSSProperties}
+                className="mt-4 border-indigo-500/40 text-white shadow-lg shadow-indigo-900/40"
+                onClick={() => router.push("/admin/jobs/create")}
+              >
+                Post Your First Job
+              </InteractiveHoverButton>
             </div>
           ) : (
             <div className="divide-y divide-white/5">
