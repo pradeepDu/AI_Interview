@@ -144,7 +144,7 @@ export default function HRDashboard() {
             <p className="text-slate-400 mt-1">Manage jobs and review applications</p>
           </div>
           <Link href="/admin/jobs/create">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+            <Button className="relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white gap-2 px-5 shadow-lg shadow-blue-900/40 hover:shadow-blue-700/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ring-1 ring-blue-500/30 hover:ring-blue-400/60">
               <Plus className="h-4 w-4" />
               Post New Job
             </Button>
@@ -210,7 +210,7 @@ export default function HRDashboard() {
               <Briefcase className="h-12 w-12 mx-auto text-slate-600 mb-3" />
               <p className="text-slate-400">No jobs posted yet</p>
               <Link href="/admin/jobs/create">
-                <Button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white gap-2">
+                <Button className="mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white gap-2 shadow-lg shadow-blue-900/40 hover:shadow-blue-700/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ring-1 ring-blue-500/30 hover:ring-blue-400/60">
                   <Plus className="h-4 w-4" />
                   Post Your First Job
                 </Button>
