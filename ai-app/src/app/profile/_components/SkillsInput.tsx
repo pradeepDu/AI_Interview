@@ -14,9 +14,13 @@ export function SkillsInput({ skills, onChange }: Props) {
   const [input, setInput] = useState("");
 
   const add = () => {
-    const trimmed = input.trim();
-    if (trimmed && !skills.includes(trimmed)) {
-      onChange([...skills, trimmed]);
+    // Support comma-separated input: "React, Vue, Node.js"
+    const newSkills = input
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s && !skills.includes(s));
+    if (newSkills.length) {
+      onChange([...skills, ...newSkills]);
       setInput("");
     }
   };
@@ -28,7 +32,7 @@ export function SkillsInput({ skills, onChange }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
-          placeholder="Type a skill and press Enter"
+          placeholder="Type skills separated by commas"
           className="bg-white/5 border-white/10 text-white placeholder:text-slate-400"
         />
         <Button

@@ -50,9 +50,13 @@ export default function CreateJobPage() {
     setForm((f) => ({ ...f, [field]: value }));
 
   const addSkill = () => {
-    const trimmed = skillInput.trim();
-    if (trimmed && !form.requiredSkills.includes(trimmed)) {
-      update("requiredSkills", [...form.requiredSkills, trimmed]);
+    // Support comma-separated input: "React, Vue, Node.js"
+    const newSkills = skillInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s && !form.requiredSkills.includes(s));
+    if (newSkills.length) {
+      update("requiredSkills", [...form.requiredSkills, ...newSkills]);
       setSkillInput("");
     }
   };
@@ -228,7 +232,7 @@ export default function CreateJobPage() {
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
-                placeholder="Type a skill and press Enter or +"
+                placeholder="Type skills separated by commas"
                 className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
               />
               <Button
