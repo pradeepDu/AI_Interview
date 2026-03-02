@@ -32,14 +32,16 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
-    const application = await ApplicationModel.findById(appId).populate('jobId');
+    // Do NOT populate so jobId stays a raw ObjectId (populate turns it into an
+    // object and .toString() would yield "[object Object]", causing a BSONError)
+    const application = await ApplicationModel.findById(appId);
     if (!application) {
       return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
 
     // Verify HR owns the job for this application
     const job = await JobModel.findOne({
-      _id: application.jobId.toString(),
+      _id: application.jobId as unknown as string,
       createdBy: user._id,
     });
     if (!job) {
